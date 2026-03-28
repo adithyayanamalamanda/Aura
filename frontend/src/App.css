@@ -339,31 +339,6 @@ body {
   transition: width 1s ease;
 }
 
-.path-animations {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  padding: 0 16px 8px;
-}
-
-.path-animation-card {
-  background: #fff;
-  border: 1px solid #f0f0f0;
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  padding: 8px 8px 6px;
-  overflow: hidden;
-}
-
-.path-animation-label {
-  text-align: center;
-  font-size: .66rem;
-  font-weight: 800;
-  color: var(--dark2);
-  letter-spacing: .2px;
-  margin-top: -2px;
-}
-
 /* ─── PATH SCREEN ─── */
 .path-nodes {
   display: flex;
@@ -379,6 +354,31 @@ body {
   align-items: center;
   width: 100%;
   position: relative;
+  overflow: visible;
+}
+
+.path-node-animation {
+  position: absolute;
+  top: 8px;
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.path-node-animation.left {
+  left: 18px;
+}
+
+.path-node-animation.right {
+  right: 18px;
 }
 
 .path-node-wrap:nth-child(odd) {
@@ -444,13 +444,18 @@ body {
 }
 
 @media (max-width: 420px) {
-  .path-animations {
-    grid-template-columns: 1fr;
+  .path-node-animation {
+    width: 72px;
+    height: 72px;
+    top: 12px;
   }
 
-  .path-animation-card {
-    max-width: 220px;
-    margin: 0 auto;
+  .path-node-animation.left {
+    left: 6px;
+  }
+
+  .path-node-animation.right {
+    right: 6px;
   }
 }
 

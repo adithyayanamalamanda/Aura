@@ -27,6 +27,13 @@ const PATH_ANIMATIONS = [
     { label: 'Skull Boy', src: `${import.meta.env.BASE_URL}animations/skull-boy.lottie` },
 ];
 
+const pickNodeAnimation = (seed: number) => {
+    const index = Math.abs((seed * 9301 + 49297) % 233280) % PATH_ANIMATIONS.length;
+    return PATH_ANIMATIONS[index];
+};
+
+const nodeAnimationSide = (seed: number) => (Math.abs((seed * 97 + 31) % 100) % 2 === 0 ? 'left' : 'right');
+
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState<{ name: string; rollNo: string; domain: string; role: 'student' | 'admin' } | null>(null);
@@ -289,22 +296,6 @@ function App() {
                     <img src={LOGO_URL} alt="AURA" style={{ width: '100px', height: 'auto', opacity: 0.9 }} />
                 </div>
 
-                <div className="path-animations">
-                    {PATH_ANIMATIONS.map((animation) => (
-                        <div className="path-animation-card" key={animation.label}>
-                            {React.createElement('dotlottie-player', {
-                                src: animation.src,
-                                background: 'transparent',
-                                speed: 1,
-                                loop: true,
-                                autoplay: true,
-                                style: { width: '100%', height: '120px' },
-                            } as any)}
-                            <div className="path-animation-label">{animation.label}</div>
-                        </div>
-                    ))}
-                </div>
-
                 <div className="section-title">🧭 Your Activity Path</div>
                 <div className="path-nodes">
                     {pathNodes.map((node, i) => (
@@ -324,6 +315,17 @@ function App() {
                             <div className="path-node-label">{node.label}</div>
                             <div className="path-node-sub">{node.sub}</div>
                             <div className="path-node-pts">{node.pts}</div>
+
+                            <div className={`path-node-animation ${nodeAnimationSide(node.id + i)}`}>
+                                {React.createElement('dotlottie-player', {
+                                    src: pickNodeAnimation(node.id + i).src,
+                                    background: 'transparent',
+                                    speed: 1,
+                                    loop: true,
+                                    autoplay: true,
+                                    style: { width: '78px', height: '78px' },
+                                } as any)}
+                            </div>
                         </div>
                     ))}
                 </div>
