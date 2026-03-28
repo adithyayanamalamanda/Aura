@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import './App.css';
 import {
     pathNodes as initialPathNodes,
@@ -317,14 +318,12 @@ function App() {
                             <div className="path-node-pts">{node.pts}</div>
 
                             <div className={`path-node-animation ${nodeAnimationSide(node.id + i)}`}>
-                                {React.createElement('dotlottie-player', {
-                                    src: pickNodeAnimation(node.id + i).src,
-                                    background: 'transparent',
-                                    speed: 1,
-                                    loop: true,
-                                    autoplay: true,
-                                    style: { width: '78px', height: '78px' },
-                                } as any)}
+                                <DotLottieReact
+                                    src={pickNodeAnimation(node.id + i).src}
+                                    loop
+                                    autoplay
+                                    style={{ width: '78px', height: '78px' }}
+                                />
                             </div>
                         </div>
                     ))}
