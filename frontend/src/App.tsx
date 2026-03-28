@@ -77,18 +77,56 @@ function App() {
         showNotif('👋 Safely logged out');
     };
 
-    const shareContributionOnLinkedIn = () => {
+    const shareContributionOnLinkedIn = async () => {
         if (typeof window === 'undefined') return;
 
         const completedCount = pathNodes.filter((n) => n.state === 'done').length;
-        const domain = user?.domain || 'Campus';
+        const badgeCount = badgesData.filter((b) => b.earned).length;
+        const rankData = lbData[user?.domain || 'Academic'] || [];
+        const rankPosition =
+            rankData
+                .map((item) => (item.you ? { ...item, pts: points } : item))
+                .sort((a, b) => b.pts - a.pts)
+                .findIndex((item) => item.you) + 1;
+
         const name = user?.name || 'AURA Contributor';
-        const appUrl = window.location.href;
-        const message = `I just shared my latest progress on AURA!\n\nName: ${name}\nDomain: ${domain}\nPoints: ${points}\nStreak: ${streak}\nCompleted Activities: ${completedCount}\n\n#Aura #StudentLeadership #CampusContributions`;
-        const shareUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(message + '\n' + appUrl)}`;
+        const domain = user?.domain || 'Campus';
+        const profileUrl = window.location.href;
+        const imageUrl = new URL(LOGO_URL, window.location.origin).toString();
+
+        const postText = [
+            `Excited to share my latest progress on AURA!`,
+            ``,
+            `Name: ${name}`,
+            `Domain: ${domain}`,
+            `Points: ${points}`,
+            `Streak: ${streak} days`,
+            `Badges Earned: ${badgeCount}`,
+            `Completed Activities: ${completedCount}`,
+            `${rankPosition > 0 ? `Leaderboard Rank: #${rankPosition}` : ''}`,
+            ``,
+            `Explore AURA: ${profileUrl}`,
+            `Logo: ${imageUrl}`,
+            ``,
+            `#Aura #StudentLeadership #CampusContributions #LearningByDoing`,
+        ]
+            .filter(Boolean)
+            .join('\n');
+
+        const shareUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(postText)}`;
+
+        let copied = false;
+        try {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(postText);
+                copied = true;
+            }
+        } catch {
+            copied = false;
+        }
 
         window.open(shareUrl, '_blank', 'noopener,noreferrer');
-        showNotif('🔗 Opening LinkedIn share...');
+        showNotif(copied ? '🔗 LinkedIn opened. Post text + image link copied.' : '🔗 LinkedIn opened. Copy post text manually if needed.');
     };
 
     // Leaderboard Domain logic
